@@ -112,6 +112,14 @@ public class InvoiceServiceImplementation implements InvoiceService {
 		return res;
 	}
 
+	@Override
+	public List<Invoice> getInvoicesById(Integer id) throws Exception {
+		if (id == null)
+			throw new NoDataException("Some of the data is missing");
+
+		return repository.getInvoicesById(id);
+	}
+
 	private List<Invoice> updateStatusAndProcessOverdue(List<Invoice> overdues, ProcessOverdue processOverdue,
 			Date currDate) {
 		List<Invoice> insertedInvoice = new ArrayList<>();

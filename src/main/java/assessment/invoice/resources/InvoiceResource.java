@@ -89,4 +89,17 @@ public class InvoiceResource {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
+
+	@GET
+	@Path("/{id}")
+	public Response getInvoicesById(@PathParam("id") Integer id) {
+		try {
+			return Response.ok(service.getInvoicesById(id)).build();
+		} catch (InvalidDataException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
 }

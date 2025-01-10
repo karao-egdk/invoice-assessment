@@ -18,4 +18,6 @@ public interface InvoiceDao {
 	Optional<Invoice> getInvoiceById(Integer id);
 
 	List<Invoice> getOverDueInvoices(Date overDueDate);
+
+	List<Invoice> getInvoicesById(Integer id);
 }

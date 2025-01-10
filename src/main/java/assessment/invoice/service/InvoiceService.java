@@ -17,4 +17,6 @@ public interface InvoiceService {
 
 	Map<String, Object> processOverdue(ProcessOverdue overdue) throws Exception;
 
+	List<Invoice> getInvoicesById(Integer id) throws Exception;
+
 }

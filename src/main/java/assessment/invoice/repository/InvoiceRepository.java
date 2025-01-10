@@ -1,7 +1,9 @@
 package assessment.invoice.repository;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.dalesbred.Database;
@@ -47,5 +49,15 @@ public class InvoiceRepository implements InvoiceDao {
 	public List<Invoice> getOverDueInvoices(Date overDueDate) {
 		final String GET_OVERDUE = "SELECT * FROM invoice WHERE status = 'PENDING' AND due_date < ?";
 		return database.findAll(Invoice.class, SqlQuery.query(GET_OVERDUE, overDueDate));
+	}
+
+	@Override
+	public List<Invoice> getInvoicesById(Integer id) {
+		final String GET_OVERDUE = "SELECT * FROM invoice WHERE id = :id OR parent_id = :id";
+
+		Map<String, Integer> parameters = new HashMap<>();
+		parameters.put("id", id);
+
+		return database.findAll(Invoice.class, SqlQuery.namedQuery(GET_OVERDUE, parameters));
 	}
 }
