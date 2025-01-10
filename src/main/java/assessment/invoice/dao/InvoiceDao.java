@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import assessment.invoice.dto.CreateInvoice;
-import assessment.invoice.dto.InvoicePayment;
+import assessment.invoice.dto.UpdateInvoice;
 import assessment.invoice.entity.Invoice;
 
 public interface InvoiceDao {
@@ -12,7 +12,7 @@ public interface InvoiceDao {
 
 	List<Invoice> getInvoices();
 
-	Invoice updatePayment(InvoicePayment payment);
+	Invoice updatePayment(UpdateInvoice payment);
 
 	Optional<Invoice> getInvoiceById(Integer id);
 }

@@ -8,7 +8,7 @@ import org.dalesbred.query.SqlQuery;
 
 import assessment.invoice.dao.InvoiceDao;
 import assessment.invoice.dto.CreateInvoice;
-import assessment.invoice.dto.InvoicePayment;
+import assessment.invoice.dto.UpdateInvoice;
 import assessment.invoice.entity.Invoice;
 
 public class InvoiceRepository implements InvoiceDao {
@@ -31,8 +31,8 @@ public class InvoiceRepository implements InvoiceDao {
 	}
 
 	@Override
-	public Invoice updatePayment(InvoicePayment payment) {
-		final String UPDATE_PAYMENT = "UPDATE invoice SET paid_amount = :amount, status =:status WHERE id = :id RETURNING *";
+	public Invoice updatePayment(UpdateInvoice payment) {
+		final String UPDATE_PAYMENT = "UPDATE invoice SET paid_amount = :amount, status =:status, parent_id = :parentId WHERE id = :id RETURNING *";
 		return database.findUnique(Invoice.class, SqlQuery.namedQuery(UPDATE_PAYMENT, payment));
 	}
 

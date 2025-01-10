@@ -3,7 +3,7 @@ package assessment.invoice.resources;
 import org.dalesbred.Database;
 
 import assessment.invoice.dto.CreateInvoice;
-import assessment.invoice.dto.InvoicePayment;
+import assessment.invoice.dto.UpdateInvoice;
 import assessment.invoice.entity.Invoice;
 import assessment.invoice.exception.InvalidDataException;
 import assessment.invoice.exception.NoDataException;
@@ -51,7 +51,7 @@ public class InvoiceResource {
 
 	@POST
 	@Path("/{id}/payments")
-	public Response updateInvoice(InvoicePayment payment, @PathParam("id") Integer id) {
+	public Response updateInvoice(UpdateInvoice payment, @PathParam("id") Integer id) {
 		try {
 			payment.setId(id);
 

@@ -8,8 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvoicePayment {
+public class UpdateInvoice {
 	private Integer id;
 	private Double amount;
 	private PayStatus status;
+	private Integer parentId;
 }
