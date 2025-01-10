@@ -7,4 +7,4 @@ database:
   driverClass: org.postgresql.Driver
   user: postgres
   password: 123456
-  url: 'jdbc:postgresql://localhost:5432/invoice'
+  url: 'jdbc:postgresql://db:5432/invoice'
