@@ -7,6 +7,8 @@ import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
 import io.dropwizard.db.DataSourceFactory;
+import io.federecio.dropwizard.swagger.SwaggerBundle;
+import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 
 public class invoiceApplication extends Application<invoiceConfiguration> {
 
@@ -21,7 +23,12 @@ public class invoiceApplication extends Application<invoiceConfiguration> {
 
 	@Override
 	public void initialize(final Bootstrap<invoiceConfiguration> bootstrap) {
-		// TODO: application initialization
+		bootstrap.addBundle(new SwaggerBundle<invoiceConfiguration>() {
+			@Override
+			protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(invoiceConfiguration configuration) {
+				return configuration.swaggerBundleConfiguration;
+			}
+		});
 	}
 
 	@Override

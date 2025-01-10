@@ -26,7 +26,7 @@ import assessment.invoice.service.implementation.InvoiceServiceImplementation;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-public class InvoiceResource {
+public class InvoiceResources {
 	private static Database db = TestDatabaseProvider.databaseForProperties("db.properties");
 	public static InvoiceService service;
 
@@ -172,14 +172,14 @@ public class InvoiceResource {
 
 		assertThrows(NoDataException.class, () -> service.processOverdue(overdue));
 	}
-	
+
 	@Test
 	public void overdueInvalidFee() throws Exception {
 		ProcessOverdue overdue = new ProcessOverdue(-100D, 10);
 
 		assertThrows(InvalidDataException.class, () -> service.processOverdue(overdue));
 	}
-	
+
 	@Test
 	public void overdueInvalidDueDays() throws Exception {
 		ProcessOverdue overdue = new ProcessOverdue(100D, -10);
