@@ -3,6 +3,7 @@ package assessment.invoice.service.implementation;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.dalesbred.Database;
@@ -29,7 +30,7 @@ public class InvoiceServiceImplementation implements InvoiceService {
 
 	public InvoiceServiceImplementation(Database database) {
 		this.repository = new InvoiceRepository(database);
-		
+
 		try {
 			database.update(generateTableIfNotExists());
 		} catch (Exception e) {
@@ -41,8 +42,9 @@ public class InvoiceServiceImplementation implements InvoiceService {
 	public Map<String, Integer> insertInvoice(CreateInvoice invoice) throws Exception {
 		if (invoice == null || invoice.getAmount() == null || invoice.getDueDate() == null)
 			throw new NoDataException("Some of the data is missing");
-		
-		if(invoice.getAmount() <= 0) throw new NoDataException("Please add appropriate amount");
+
+		if (invoice.getAmount() <= 0)
+			throw new NoDataException("Please add appropriate amount");
 
 		Invoice insertedInvoice = repository.insertInvoice(invoice);
 
@@ -50,6 +52,11 @@ public class InvoiceServiceImplementation implements InvoiceService {
 		res.put("id", insertedInvoice.getId());
 
 		return res;
+	}
+
+	@Override
+	public List<Invoice> getInvoices() {
+		return repository.getInvoices();
 	}
 
 }
