@@ -2,6 +2,7 @@ package assessment.invoice;
 
 import org.dalesbred.Database;
 
+import assessment.invoice.resources.InvoiceResource;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
@@ -28,6 +29,8 @@ public class invoiceApplication extends Application<invoiceConfiguration> {
 
 		DataSourceFactory factory = configuration.getDataSourceFactory();
 		Database database = Database.forUrlAndCredentials(factory.getUrl(), factory.getUser(), factory.getPassword());
+
+		environment.jersey().register(new InvoiceResource(database));
 	}
 
 }
