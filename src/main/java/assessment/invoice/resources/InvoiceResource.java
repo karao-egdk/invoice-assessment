@@ -3,6 +3,7 @@ package assessment.invoice.resources;
 import org.dalesbred.Database;
 
 import assessment.invoice.dto.CreateInvoice;
+import assessment.invoice.dto.ProcessOverdue;
 import assessment.invoice.dto.UpdateInvoice;
 import assessment.invoice.entity.Invoice;
 import assessment.invoice.exception.InvalidDataException;
@@ -60,6 +61,23 @@ public class InvoiceResource {
 				return Response.status(Status.BAD_REQUEST).entity("Please provide a proper invoice id").build();
 
 			return Response.ok(updatedInvoice).build();
+
+		} catch (NoDataException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+
+		} catch (InvalidDataException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+
+		} catch (Exception e) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
+
+	@POST
+	@Path("/process-overdue")
+	public Response processOverdue(ProcessOverdue overdue) {
+		try {
+			return Response.ok(service.processOverdue(overdue)).build();
 
 		} catch (NoDataException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();

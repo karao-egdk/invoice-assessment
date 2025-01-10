@@ -2,11 +2,14 @@ package assessment.invoice.service.implementation;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.dalesbred.Database;
 
 import com.google.common.base.Charsets;
@@ -14,7 +17,8 @@ import com.google.common.io.Resources;
 
 import assessment.invoice.dao.InvoiceDao;
 import assessment.invoice.dto.CreateInvoice;
-import assessment.invoice.dto.InvoicePayment;
+import assessment.invoice.dto.ProcessOverdue;
+import assessment.invoice.dto.UpdateInvoice;
 import assessment.invoice.entity.Invoice;
 import assessment.invoice.enums.PayStatus;
 import assessment.invoice.exception.InvalidDataException;
@@ -64,7 +68,7 @@ public class InvoiceServiceImplementation implements InvoiceService {
 	}
 
 	@Override
-	public Invoice updatePayment(InvoicePayment payment) throws Exception {
+	public Invoice updatePayment(UpdateInvoice payment) throws Exception {
 		if (payment == null || payment.getAmount() == null || payment.getId() == null)
 			throw new NoDataException("Some of the data is missing");
 
@@ -87,6 +91,48 @@ public class InvoiceServiceImplementation implements InvoiceService {
 		payment.setStatus(updatedStatus);
 
 		return repository.updatePayment(payment);
+	}
+
+	@Override
+	public Map<String, Object> processOverdue(ProcessOverdue overdue) throws Exception {
+		if (overdue == null || overdue.getLateFee() == null || overdue.getOverdueDays() == null)
+			throw new NoDataException("Some of the data is missing");
+
+		if (overdue.getLateFee() < 0 || overdue.getOverdueDays() < 0)
+			throw new InvalidDataException("Data cannot be in negative");
+
+		Date currDate = new Date();
+		List<Invoice> overdueInvoices = repository.getOverDueInvoices(currDate);
+		List<Invoice> insertedInvoice = updateStatusAndProcessOverdue(overdueInvoices, overdue, currDate);
+
+		Map<String, Object> res = new HashMap<>();
+		res.put("overdue_invoices", overdueInvoices);
+		res.put("inserted_invoices", insertedInvoice);
+
+		return res;
+	}
+
+	private List<Invoice> updateStatusAndProcessOverdue(List<Invoice> overdues, ProcessOverdue processOverdue,
+			Date currDate) {
+		List<Invoice> insertedInvoice = new ArrayList<>();
+
+		overdues.forEach(overdue -> {
+			PayStatus status = overdue.getPaidAmount() == 0 ? PayStatus.VOID : PayStatus.PAID;
+
+			// Update Invoice status
+			UpdateInvoice updateInvoice = new UpdateInvoice(overdue.getId(), overdue.getPaidAmount(), status);
+			repository.updatePayment(updateInvoice);
+
+			// Insert new Invoice
+			double newAmount = overdue.getAmount() - overdue.getPaidAmount() + processOverdue.getLateFee();
+			Date newOverdueDate = DateUtils.addDays(currDate, processOverdue.getOverdueDays());
+			int parentId = overdue.getParentId() == null ? overdue.getId() : overdue.getParentId();
+
+			CreateInvoice createInvoice = new CreateInvoice(newAmount, newOverdueDate, parentId);
+			insertedInvoice.add(repository.insertInvoice(createInvoice));
+		});
+
+		return insertedInvoice;
 	}
 
 }

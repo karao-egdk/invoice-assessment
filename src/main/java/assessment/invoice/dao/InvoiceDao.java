@@ -1,5 +1,6 @@
 package assessment.invoice.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,4 +16,6 @@ public interface InvoiceDao {
 	Invoice updatePayment(UpdateInvoice payment);
 
 	Optional<Invoice> getInvoiceById(Integer id);
+
+	List<Invoice> getOverDueInvoices(Date overDueDate);
 }

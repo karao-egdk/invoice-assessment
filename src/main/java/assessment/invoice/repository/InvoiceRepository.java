@@ -1,5 +1,6 @@
 package assessment.invoice.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,7 @@ public class InvoiceRepository implements InvoiceDao {
 
 	@Override
 	public Invoice updatePayment(UpdateInvoice payment) {
-		final String UPDATE_PAYMENT = "UPDATE invoice SET paid_amount = :amount, status =:status, parent_id = :parentId WHERE id = :id RETURNING *";
+		final String UPDATE_PAYMENT = "UPDATE invoice SET paid_amount = :amount, status =:status WHERE id = :id RETURNING *";
 		return database.findUnique(Invoice.class, SqlQuery.namedQuery(UPDATE_PAYMENT, payment));
 	}
 
@@ -40,5 +41,11 @@ public class InvoiceRepository implements InvoiceDao {
 	public Optional<Invoice> getInvoiceById(Integer id) {
 		final String GET_INVOICES = "SELECT * FROM invoice WHERE id = ?";
 		return database.findOptional(Invoice.class, SqlQuery.query(GET_INVOICES, id));
+	}
+
+	@Override
+	public List<Invoice> getOverDueInvoices(Date overDueDate) {
+		final String GET_OVERDUE = "SELECT * FROM invoice WHERE status = 'PENDING' AND due_date < ?";
+		return database.findAll(Invoice.class, SqlQuery.query(GET_OVERDUE, overDueDate));
 	}
 }

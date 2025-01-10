@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import assessment.invoice.dto.CreateInvoice;
-import assessment.invoice.dto.InvoicePayment;
+import assessment.invoice.dto.ProcessOverdue;
+import assessment.invoice.dto.UpdateInvoice;
 import assessment.invoice.entity.Invoice;
 
 public interface InvoiceService {
@@ -12,6 +13,8 @@ public interface InvoiceService {
 
 	List<Invoice> getInvoices();
 
-	Invoice updatePayment(InvoicePayment payment) throws Exception;
+	Invoice updatePayment(UpdateInvoice payment) throws Exception;
+
+	Map<String, Object> processOverdue(ProcessOverdue overdue) throws Exception;
 
 }
