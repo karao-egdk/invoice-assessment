@@ -4,10 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import assessment.invoice.dto.CreateInvoice;
+import assessment.invoice.dto.InvoicePayment;
 import assessment.invoice.entity.Invoice;
 
 public interface InvoiceService {
 	Map<String, Integer> insertInvoice(CreateInvoice invoice) throws Exception;
-	
+
 	List<Invoice> getInvoices();
+
+	Invoice updatePayment(InvoicePayment payment) throws Exception;
+
 }

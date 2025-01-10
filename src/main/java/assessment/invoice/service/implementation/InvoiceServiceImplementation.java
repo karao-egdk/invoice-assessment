@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.dalesbred.Database;
 
@@ -13,7 +14,10 @@ import com.google.common.io.Resources;
 
 import assessment.invoice.dao.InvoiceDao;
 import assessment.invoice.dto.CreateInvoice;
+import assessment.invoice.dto.InvoicePayment;
 import assessment.invoice.entity.Invoice;
+import assessment.invoice.enums.PayStatus;
+import assessment.invoice.exception.InvalidDataException;
 import assessment.invoice.exception.NoDataException;
 import assessment.invoice.repository.InvoiceRepository;
 import assessment.invoice.service.InvoiceService;
@@ -57,6 +61,32 @@ public class InvoiceServiceImplementation implements InvoiceService {
 	@Override
 	public List<Invoice> getInvoices() {
 		return repository.getInvoices();
+	}
+
+	@Override
+	public Invoice updatePayment(InvoicePayment payment) throws Exception {
+		if (payment == null || payment.getAmount() == null || payment.getId() == null)
+			throw new NoDataException("Some of the data is missing");
+
+		Optional<Invoice> invoice = repository.getInvoiceById(payment.getId());
+
+		if (invoice.isEmpty())
+			return null;
+
+		if (payment.getAmount() <= 0 || invoice.get().getAmount() < payment.getAmount())
+			throw new InvalidDataException(
+					"Amount being paid is either negative or is greater than the amount expected to pay");
+
+		double totalPaid = invoice.get().getPaidAmount() + payment.getAmount();
+		if (totalPaid > invoice.get().getAmount())
+			throw new InvalidDataException("Cannot pay more than the actual amount");
+
+		PayStatus updatedStatus = totalPaid == invoice.get().getAmount() ? PayStatus.PAID : PayStatus.PENDING;
+
+		payment.setAmount(totalPaid);
+		payment.setStatus(updatedStatus);
+
+		return repository.updatePayment(payment);
 	}
 
 }
