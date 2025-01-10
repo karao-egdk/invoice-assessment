@@ -52,7 +52,7 @@ public class InvoiceServiceImplementation implements InvoiceService {
 			throw new NoDataException("Some of the data is missing");
 
 		if (invoice.getAmount() <= 0)
-			throw new NoDataException("Please add appropriate amount");
+			throw new InvalidDataException("Please add appropriate amount");
 
 		Invoice insertedInvoice = repository.insertInvoice(invoice);
 

@@ -36,8 +36,13 @@ public class InvoiceResource {
 			return Response.ok(service.insertInvoice(invoice)).build();
 		} catch (NoDataException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+
+		} catch (InvalidDataException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+
 		} catch (Exception e) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+
 		}
 	}
 
