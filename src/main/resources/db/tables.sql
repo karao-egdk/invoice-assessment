@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS invoice(
 	id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-	amount DECIMAL,
-	paid_amount DECIMAL,
-	due_date TEXT,
+	amount DOUBLE PRECISION,
+	paid_amount DOUBLE PRECISION DEFAULT 0,
+	due_date DATE,
 	status TEXT DEFAULT 'PENDING',
 	parent_id INTEGER,
 	FOREIGN KEY (parent_id) REFERENCES invoice(id)
