@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class CreateInvoice {
 	private Double amount;
 	private Date dueDate;
+	private Integer parentId;
 }

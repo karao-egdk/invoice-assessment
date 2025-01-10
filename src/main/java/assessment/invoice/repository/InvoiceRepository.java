@@ -20,7 +20,7 @@ public class InvoiceRepository implements InvoiceDao {
 
 	@Override
 	public Invoice insertInvoice(CreateInvoice invoice) {
-		final String INSERT_INVOICE = "INSERT INTO invoice (amount, due_date) VALUES (:amount, :dueDate) RETURNING *";
+		final String INSERT_INVOICE = "INSERT INTO invoice (amount, due_date, parent_id) VALUES (:amount, :dueDate, :parentId) RETURNING *";
 		return database.findUnique(Invoice.class, SqlQuery.namedQuery(INSERT_INVOICE, invoice));
 	}
 
